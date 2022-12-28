@@ -1,0 +1,42 @@
+---
+- name: install tomcat file
+  hosts: all
+  become: True
+  tasks:
+  - name: install java
+    yum:
+      name: java
+      state: installed
+    when: ansible_os_family == "RedHat"
+
+  - name: install java on ubuntu
+    apt:
+      name: default-jdk
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: download tomcat packages
+    get_url:
+      #ourl: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.27/bin/embed/apache-tomcat-10.0.27-embed.tar.gz
+      #url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.27/bin/apache-tomcat-10.0.27-deployer.tar.gz
+      url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.4/bin/apache-tomcat-10.1.4.tar.gz
+      dest: /opt/
+      mode: '0755'
+
+  - name: untar apache packages
+    unarchive:
+      src: /opt/apache-tomcat-10.1.4.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: add execution persmission on startup.sh file
+    file:
+      path: /opt/apache-tomcat-10.1.4/bin/startup.sh
+      mode: 0777
+
+  - name: start tomcat service
+    shell: nohup ./startup.sh
+    args:
+      chdir: /opt/apache-tomcat-10.1.4/bin
+
+

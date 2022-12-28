@@ -1,0 +1,7 @@
+---
+# tasks file for setup-apache
+- name: install packager
+  apt:
+    name: apache2
+    state: present
+  notify: start apache2 service

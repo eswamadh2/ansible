@@ -1,0 +1,12 @@
+---
+- name: create vault pass file usiong git
+  hosts: all
+  become: True
+  vars_files:
+    - vault-pass.yml
+  tasks:
+   - name: clone the repo
+     git:
+       repo: https://esmadhap:{{ password }}@github.com/eswamadh2/test.git
+       dest: /home/ansadmin/vault
+
